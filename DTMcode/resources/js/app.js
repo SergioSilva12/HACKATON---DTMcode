@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import '../css/app.css';
+import 'plotly.js-dist-min';
 import LandingPage from './LandingPage.vue';
 import DashboardLayout from './DashboardLayout.vue';
 import AuthPage from './AuthPage.vue';

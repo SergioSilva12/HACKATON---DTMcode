@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import WaterForecastChart from './WaterForecastChart.vue';
+import DashboardSurface from './DashboardSurface.vue';
 
 const user = ref(window.DTMcode?.user ?? null);
 const summaryCards = ref([
@@ -118,15 +119,7 @@ onMounted(() => {
                 <a href="/topografia" class="rounded-md border border-[#58709f]/40 bg-gray-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#37326b]">Abrir</a>
               </div>
 
-              <div class="relative h-[260px] overflow-hidden rounded-lg border border-[#58709f]/30 bg-gray-50">
-                <div class="absolute inset-0 opacity-60" style="background-color: rgba(131,127,197,0.08);"></div>
-                <div class="absolute left-10 top-10 h-24 w-24 border border-[#837fc5]/50 bg-white"></div>
-                <div class="absolute right-12 top-12 h-28 w-28 border border-[#58709f]/40 bg-white"></div>
-                <div class="absolute bottom-10 left-14 h-32 w-32 border border-[#7c3494]/30 bg-gray-100"></div>
-                <div class="absolute inset-0 grid place-items-center">
-                  <div class="bg-[#37326b] px-4 py-2 text-sm font-semibold text-white">Mapa em preparação</div>
-                </div>
-              </div>
+              <DashboardSurface />
             </div>
 
             <div class="rounded-2xl border border-[#58709f]/30 bg-white p-5">

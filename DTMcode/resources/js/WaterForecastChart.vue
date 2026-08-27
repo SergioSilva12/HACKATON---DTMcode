@@ -28,7 +28,30 @@ async function fetchCavData() {
     }
 
     const result = await response.json();
-    history.value = (result.data ?? []).map((item) => ({
+    const items = result.data ?? [];
+
+    if (items.length === 0) {
+      // Tentar endpoint mockado associado ao usuário
+      const userEmail = window.DTMcode?.user?.email || 'sergiolimasilva12@gmail.com';
+      try {
+        const mockRes = await fetch(`/api/dashboard/mock-data?email=${encodeURIComponent(userEmail)}`);
+        if (mockRes.ok) {
+          const mock = await mockRes.json();
+          history.value = mock.volume_history.map((item) => ({
+            label: new Date(item.date).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }),
+            value: Number(item.volume ?? 0),
+          }));
+          hasData.value = history.value.length > 0;
+          forecast.value = [];
+          renderChart();
+          return;
+        }
+      } catch (e) {
+        console.warn('Falha ao obter mock:', e);
+      }
+    }
+
+    history.value = items.map((item) => ({
       label: new Date(item.data_registro).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }),
       value: Number(item.volume ?? 0),
     }));
@@ -38,6 +61,25 @@ async function fetchCavData() {
     renderChart();
   } catch (error) {
     console.error(error);
+    // Última tentativa: endpoint mock
+    try {
+      const userEmail = window.DTMcode?.user?.email || 'sergiolimasilva12@gmail.com';
+      const mockRes = await fetch(`/api/dashboard/mock-data?email=${encodeURIComponent(userEmail)}`);
+      if (mockRes.ok) {
+        const mock = await mockRes.json();
+        history.value = mock.volume_history.map((item) => ({
+          label: new Date(item.date).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }),
+          value: Number(item.volume ?? 0),
+        }));
+        hasData.value = history.value.length > 0;
+        forecast.value = [];
+        renderChart();
+        return;
+      }
+    } catch (e) {
+      console.warn('Falha ao obter mock no catch:', e);
+    }
+
     history.value = [];
     hasData.value = false;
     forecast.value = [];
